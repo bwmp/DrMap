@@ -82,6 +82,55 @@ public class PictureManager {
         return null;
     }
 
+    public Image[][] downloadStretchedProportionalImage(String link, int width, int height, Color finalBackground) {
+        BufferedImage image;
+        URLConnection con = null;
+        InputStream in = null;
+        try {
+            URL url = new URL(link);
+            con = url.openConnection();
+            con.setConnectTimeout(500);
+            con.setReadTimeout(500);
+            in = con.getInputStream();
+            image = ImageIO.read(in);
+            if (width == 0) {
+                Image ri = image.getScaledInstance(height * 128 * image.getWidth() / image.getHeight(), height * 128, 1);
+                double widthFrames = height * image.getWidth();
+                widthFrames = widthFrames / image.getHeight();
+                if (widthFrames % 1 > 0) widthFrames++;
+                return downloadTouchingTopBottomImage(ri, (int) widthFrames, height, finalBackground);
+            }
+            if (height == 0) {
+                Image ri = image.getScaledInstance(width * 128, width * 128 * image.getHeight() / image.getWidth(), 1);
+                double heightFrames = width * image.getHeight();
+                heightFrames = heightFrames / image.getWidth();
+                if (heightFrames % 1 > 0) heightFrames++;
+                return downloadTouchingLeftRightImage(ri, width, (int) heightFrames, finalBackground);
+            }
+        } catch (IOException ignored) {
+        } finally {
+            if(in != null) {
+                try {
+                    in.close();
+                } catch(IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if (con != null) {
+                ((HttpURLConnection) con).disconnect();
+            }
+        }
+        return null;
+    }
+
+    public Image[][] downloadTouchingTopBottomImage(Image image, int width, int height, Color background) {
+        int h = image;
+    }
+
+    public Image[][] downloadTouchingLeftRightImage(Image image, int width, int height, Color background) {
+
+    }
+
     public Image downloadProportionalImage(String link, Color finalBackground) {
         BufferedImage image;
         URLConnection con = null;
@@ -94,7 +143,7 @@ public class PictureManager {
             in = con.getInputStream();
             image = ImageIO.read(in);
             if (image.getHeight() >= image.getWidth()) {
-                Image resizedImage = image.getScaledInstance(128*image.getWidth()/image.getHeight(), 128, 1);
+                Image resizedImage = image.getScaledInstance(128 * image.getWidth() / image.getHeight(), 128, 1);
                 BufferedImage newImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g2d = newImage.createGraphics();
                 if (finalBackground == null) {

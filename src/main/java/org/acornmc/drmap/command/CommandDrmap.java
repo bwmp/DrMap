@@ -154,6 +154,7 @@ public class CommandDrmap implements TabExecutor {
                 height = 0;
             }
 
+            // If they specified height xor width
             if (width > 0 && height == 0) {
                 height = 1;
             }
