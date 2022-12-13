@@ -1,6 +1,7 @@
 package org.acornmc.drmap.picture;
 
 import org.acornmc.drmap.DrMap;
+import org.acornmc.drmap.configuration.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapView;
@@ -89,6 +90,10 @@ public class PictureManager {
         try {
             URL url = new URL(link);
             con = url.openConnection();
+            int contentLength = con.getContentLength();
+            if (contentLength > Config.MAX_IMAGE_SIZE) {
+                return null;
+            }
             con.setConnectTimeout(500);
             con.setReadTimeout(500);
             in = con.getInputStream();
