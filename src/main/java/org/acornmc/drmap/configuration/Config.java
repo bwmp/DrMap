@@ -12,14 +12,12 @@ import java.util.logging.Level;
 
 public class Config {
     public static String LANGUAGE_FILE = "lang-en.yml";
-    public static boolean ENABLE_BSTATS = true;
     public static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss z";
     public static int MAX_IMAGE_SIZE = 999999999;
     private static YamlConfiguration config;
 
     private static void init() {
         LANGUAGE_FILE = getString("language-file", LANGUAGE_FILE);
-        ENABLE_BSTATS = getBoolean("enable-bstats", true);
         TIME_FORMAT = getString("time-format", TIME_FORMAT);
         MAX_IMAGE_SIZE = config.getInt("max-image-size", MAX_IMAGE_SIZE);
 
